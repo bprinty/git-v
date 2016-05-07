@@ -1,0 +1,75 @@
+#!/usr/bin/env sh
+#
+# git plugin enabling remote repo syncing, because
+# git-annex doesn't seem to fit this need well
+# 
+# @author <bprinty@gmail.com>
+# ------------------------------------------------
+
+
+# meta
+# ----
+usage() {
+    echo "usage: git xfer [--version] [--help] <command> [<args>]"
+    echo
+    echo "Available subcommands are:"
+    echo "  add       Add file to be tracked by git-xfer"
+    echo "  remove    Remove file for tracking via git-xfer"
+    echo "  rm        Remove file and remove tracking information for file"
+    echo "  push      Push local files to remote"
+    echo "  pull      Pull files from remote server locally"
+    echo "  sync      Sync remote branch"
+    echo "  list      List locally tracked files or remote tracked files"
+    echo "  diff      List differences between local and remote"
+    echo
+}
+
+version() {
+    echo "0.0.5"
+}
+
+
+# exec
+# ----
+main() {
+    if [ "$#" -lt 1 ]; then
+        usage; exit 1
+    fi
+
+    local subcommand="$1"; shift
+
+    case $subcommand in
+        "-h"|"--help")
+            usage; exit 0
+            ;;
+        "-v"|"--version")
+            version; exit 0
+            ;;
+        "-r"|"--reset")
+            rm -rf "$base/.git/xfer"; exit 0
+            ;;
+    esac
+
+    # set up git working directory
+    local workingdir=$(dirname "$(echo "$0" | sed -e 's,\\,/,g')")
+    if [ ! -e "$workingdir/git-xfer-$subcommand" ]; then
+        usage; exit 1
+    fi
+
+    # ensure user is inside git repository
+    gitdir=`git rev-parse --show-toplevel`
+    if [ ! -e "$gitdir" ]; then
+        exit 1
+    fi
+
+    # create directory if not exists
+    if [ ! -e "$gitdir/.git/xfer" ]; then
+        mkdir "$gitdir/.git/xfer"
+    fi
+
+    sh "$workingdir/git-xfer-$subcommand" "$@"
+}
+
+base=`git rev-parse --show-toplevel`
+main "$@"
+
