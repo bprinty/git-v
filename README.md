@@ -3,6 +3,8 @@ git-v
 
 Git plugin for managing project version numbers. 
 
+THIS PROJECT IS IN DEVELOPMENT MODE AND IS NOT READY FOR USE. PLEASE DO NOT CLONE IT YET.
+
 
 ## Installation:
 
