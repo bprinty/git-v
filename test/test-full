@@ -10,7 +10,7 @@
 # ------
 base=`git rev-parse --show-toplevel`
 commit=`git rev-parse HEAD | cut -c-7`
-tracking="$base/.git/v/marks"
+tracking="$base/.git/version/marks"
 cd "$base/test"
 echo '__version__ = "0.0.1"' > simpletest
 echo '__version__ = "0.0.1-rc98ac7a"' > rctest
@@ -35,24 +35,24 @@ git v add simpletest
 git v add rctest
 assertEqual `git v list` "simpletest ... 0.0.1\nrctest ... 0.0.1-rc98ac7a"
 
-# remove test
-git v remove rctest
-assertEqual `git v list` "simpletest ... 0.0.1"
+# # remove test
+# git v remove rctest
+# assertEqual `git v list` "simpletest ... 0.0.1"
 
-# increment tests
-assertEqual `git v up subminor` "simpletest ... 0.0.1 --> 0.0.2"
-assertEqual `git v up minor` "simpletest ... 0.0.2 --> 0.1.2"
-assertEqual `git v up major` "simpletest ... 0.1.2 --> 1.1.2"
+# # increment tests
+# assertEqual `git v up subminor` "simpletest ... 0.0.1 --> 0.0.2"
+# assertEqual `git v up minor` "simpletest ... 0.0.2 --> 0.1.2"
+# assertEqual `git v up major` "simpletest ... 0.1.2 --> 1.1.2"
 
-# decrement tests
-assertEqual `git v down subminor` "simpletest ... 1.1.2 --> 1.1.1"
-assertEqual `git v down minor` "simpletest ... 1.1.1 --> 1.0.1"
-assertEqual `git v down major` "simpletest ... 1.0.1 --> 0.0.1"
+# # decrement tests
+# assertEqual `git v down subminor` "simpletest ... 1.1.2 --> 1.1.1"
+# assertEqual `git v down minor` "simpletest ... 1.1.1 --> 1.0.1"
+# assertEqual `git v down major` "simpletest ... 1.0.1 --> 0.0.1"
 
-# rc tests
-assertEqual `git v rc` "simpletest ... 0.0.1 --> 0.0.1-rc$commit"
-assertEqual `git v up subminor` "simpletest ... 0.0.1-rc$commit --> 0.0.1"
-git v remove simpletest
-git v add rctest
-assertEqual `git v rc` "rctest ... 0.0.1-rc98ac7a --> 0.0.1-rc$commit"
-git v remove rctest
+# # rc tests
+# assertEqual `git v rc` "simpletest ... 0.0.1 --> 0.0.1-rc$commit"
+# assertEqual `git v up subminor` "simpletest ... 0.0.1-rc$commit --> 0.0.1"
+# git v remove simpletest
+# git v add rctest
+# assertEqual `git v rc` "rctest ... 0.0.1-rc98ac7a --> 0.0.1-rc$commit"
+# git v remove rctest

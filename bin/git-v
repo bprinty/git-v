@@ -1,7 +1,6 @@
 #!/usr/bin/env sh
 #
-# git plugin enabling remote repo syncing, because
-# git-annex doesn't seem to fit this need well
+# git plugin for managing version numbering
 # 
 # @author <bprinty@gmail.com>
 # ------------------------------------------------
@@ -10,22 +9,20 @@
 # meta
 # ----
 usage() {
-    echo "usage: git xfer [--version] [--help] <command> [<args>]"
+    echo "usage: git v [--version] [--help] [--reset] <command> [<args>]"
     echo
     echo "Available subcommands are:"
-    echo "  add       Add file to be tracked by git-xfer"
-    echo "  remove    Remove file for tracking via git-xfer"
-    echo "  rm        Remove file and remove tracking information for file"
-    echo "  push      Push local files to remote"
-    echo "  pull      Pull files from remote server locally"
-    echo "  sync      Sync remote branch"
-    echo "  list      List locally tracked files or remote tracked files"
-    echo "  diff      List differences between local and remote"
+    echo "  add       Add file to be tracked by git-v."
+    echo "  remove    Remove file for tracking via git-v."
+    echo "  list      List version information for tracked files."
+    echo "  up        Increment version numbers for tracked files."
+    echo "  down      Decrement version numbers for tracked files."
+    echo "  rc        Add release cycle commit hash on version number for tracked files."
     echo
 }
 
 version() {
-    echo "0.0.5"
+    echo "0.0.1"
 }
 
 
@@ -46,7 +43,7 @@ main() {
             version; exit 0
             ;;
         "-r"|"--reset")
-            rm -rf "$base/.git/xfer"; exit 0
+            rm -rf "$base/.git/version"; exit 0
             ;;
     esac
 
@@ -63,8 +60,9 @@ main() {
     fi
 
     # create directory if not exists
-    if [ ! -e "$gitdir/.git/xfer" ]; then
-        mkdir "$gitdir/.git/xfer"
+    if [ ! -e "$gitdir/.git/version" ]; then
+        mkdir "$gitdir/.git/version"
+        touch "$gitdir/.git/version/marks"
     fi
 
     sh "$workingdir/git-xfer-$subcommand" "$@"

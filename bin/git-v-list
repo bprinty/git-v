@@ -9,11 +9,15 @@
 # meta
 # ----
 usage() {
-    echo "usage: git xfer list [options] [<remote>]"
+    echo "usage: git v list [--help]"
     echo ""
     echo "Options:"
     echo "  -h | --help              Show help and exit."
-    echo "  -f | --files             Show only files."
+}
+
+version() {
+    file="$1"
+    cat "$file" | grep ''
 }
 
 
@@ -21,32 +25,23 @@ usage() {
 # ----
 main() {
 
-    local FILES="FALSE"
-
     case $1 in
         "-h"|"--help")
             usage; exit 0
             ;;
-        "-f"|"--files")
-            FILES="TRUE"; shift
-            ;;
     esac
 
-    if [ ! -z $1 ]; then
-        cache="$cache-$1"
-    fi
-
     if [ ! -e "$cache" ]; then
-       echo ''; exit 0
+       echo 'Could not find tracking list! Something went wrong with your configuration.'
+       exit 1
     fi
 
-    if [ "$FILES" = "TRUE" ]; then
-        cat "$cache" | sed 's/.*\.\//.\//g' | sed 's/  local.*//g'
-    else
-        cat "$cache"
-    fi
+    for i in `cat $marks`; do
+        version=`grep -Eoh '\d\.\d\.\d(-rc[0-9a-f]{7})?' $i`
+        echo "$i ... $version"
+    done
 }
 
 base=`git rev-parse --show-toplevel`
-cache="$base/.git/xfer/cache"
+marks="$base/.git/version/marks"
 main "$@"
