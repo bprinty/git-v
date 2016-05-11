@@ -49,7 +49,7 @@ main() {
 
     # set up git working directory
     local workingdir=$(dirname "$(echo "$0" | sed -e 's,\\,/,g')")
-    if [ ! -e "$workingdir/git-xfer-$subcommand" ]; then
+    if [ ! -e "$workingdir/git-v-$subcommand" ]; then
         usage; exit 1
     fi
 
@@ -62,10 +62,10 @@ main() {
     # create directory if not exists
     if [ ! -e "$gitdir/.git/version" ]; then
         mkdir "$gitdir/.git/version"
-        touch "$gitdir/.git/version/marks"
     fi
+    touch "$gitdir/.git/version/marks"
 
-    sh "$workingdir/git-xfer-$subcommand" "$@"
+    sh "$workingdir/git-v-$subcommand" "$@"
 }
 
 base=`git rev-parse --show-toplevel`

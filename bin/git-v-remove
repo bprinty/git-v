@@ -38,7 +38,10 @@ main() {
             exit 1
         fi
         # STOPPED HERE .. NEED TO GET RELATIVE PATH OF FILE AND REMOVE FROM MARKS LIST
-        echo $i
+        fullpath=$(cd "$(dirname $i)" && pwd -P)/$(basename "$i")
+        relpath=$(echo "$fullpath" | sed "s|$base|.|" | sed 's/ /\\ /'g)
+        grep -v "$relpath" $marks > $marks.tmp
+        mv $marks.tmp $marks
     done
     IFS=$OLDIFS
 }

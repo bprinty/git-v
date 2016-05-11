@@ -31,15 +31,30 @@ main() {
             usage; exit 0
             ;;
     esac
+    vtype=$1
 
+    cd $base
     for i in `cat $marks`; do
-        version=`grep -Eoh '\d\.\d\.\d(-rc[0-9a-f]{7})?' $i`
+        version=`grep -Eoh '\d\.\d\.\d(-rc[0-9a-f]{5,10})?' $i`
         if [ "$version" = "" ]; then
             echo "No version-like string found in $i. Abort!"
             exit 1
         fi
-        # STOPPED HERE .. NEED TO INCREMENT VERSION NUMBER
-        echo $i
+        newversion=`echo $version | sed 's/-rc.*//g'`
+        major=`echo $newversion | awk 'BEGIN { FS = "." } ; { print $1 }'`
+        minor=`echo $newversion | awk 'BEGIN { FS = "." } ; { print $2 }'`
+        subminor=`echo $newversion | awk 'BEGIN { FS = "." } ; { print $3 }'`
+        if [ "$vtype" = "major" ]; then
+            major=`echo "$major + 1" | bc`
+        elif [ $vtype = "minor" ]; then
+            minor=`echo "$minor + 1" | bc`
+        elif [ $vtype = "subminor" ]; then
+            subminor=`echo "$subminor + 1" | bc`
+        fi
+        newversion="$major.$minor.$subminor"
+        cat $i | sed "s/$version/$newversion/g" > $i.tmp
+        mv $i.tmp $i
+        echo "$i ... $version --> $newversion"
     done
 }
 

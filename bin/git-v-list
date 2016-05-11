@@ -31,13 +31,14 @@ main() {
             ;;
     esac
 
-    if [ ! -e "$cache" ]; then
+    if [ ! -e "$marks" ]; then
        echo 'Could not find tracking list! Something went wrong with your configuration.'
        exit 1
     fi
 
+    cd $base
     for i in `cat $marks`; do
-        version=`grep -Eoh '\d\.\d\.\d(-rc[0-9a-f]{7})?' $i`
+        version=`grep -Eoh '\d\.\d\.\d(-rc[0-9a-f]{5,10})?' $i`
         echo "$i ... $version"
     done
 }

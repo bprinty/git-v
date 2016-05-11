@@ -30,7 +30,7 @@ uninstall:
 
 .PHONY: test
 test:
-	PATH=`pwd`/bin:$$PATH && for cmd in $(TESTS); do sh ./test/$$cmd; done
+	@PATH=`pwd`/bin:$$PATH && for cmd in $(TESTS); do bash ./test/$$cmd; done
 
 release: test
 	PATH=`pwd`/bin:$$PATH && TAG=`git v -v` && git tag -d $$TAG || echo "local tag available"

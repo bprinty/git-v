@@ -19,24 +19,25 @@ usage() {
 # exec
 # ----
 main() {
-    if [ "$#" -lt 1 ]; then
-        usage; exit 1
-    fi
-
     case "$1" in
         "-h"|"--help")
             usage; exit 0
             ;;
     esac
 
+    cd $base
     for i in `cat $marks`; do
-        version=`grep -Eoh '\d\.\d\.\d(-rc[0-9a-f]{7})?' $i`
+        version=`grep -Eoh '\d\.\d\.\d(-rc[0-9a-f]{5,10})?' $i`
         if [ "$version" = "" ]; then
             echo "No version-like string found in $i. Abort!"
             exit 1
         fi
-        # STOPPED HERE .. NEED TO INCREMENT VERSION NUMBER WITH COMMIT HASH
-        echo $i
+        commit=`git rev-parse HEAD | cut -c-7`
+        newversion=`echo $version | sed 's/-rc.*//g'`
+        newversion="$newversion-rc$commit"
+        cat $i | sed "s/$version/$newversion/g" > $i.tmp
+        mv $i.tmp $i
+        echo "$i ... $version --> $newversion"
     done
 }
 

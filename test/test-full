@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/bin/bash
 #
 # test add functionality for git plugin
 # 
@@ -18,41 +18,76 @@ echo '__version__ = "0.0.1-rc98ac7a"' > rctest
 
 # funcs
 # -----
+FAIL='FALSE'
 assertEqual() {
+	GREEN='\033[0;32m'
+	RED='\033[0;31m'
+	NC='\033[0m'
     if [ "$1" == "$2" ]; then
-        echo -n 'ok'
+        printf $GREEN'✓'$NC
     else
-        echo 'fail!'
-        exit 1
+        printf $RED'✗'$NC
+        FAIL='TRUE'
     fi
 }
 
 
 # testing
 # -------
-# add test
-git v add simpletest
-git v add rctest
-assertEqual `git v list` "simpletest ... 0.0.1\nrctest ... 0.0.1-rc98ac7a"
+# base tests
+echo -n 'testing basic commands ... '
+assertEqual `git v --version | wc -l` 1
+assertEqual `git v -h | wc -l` 10
+assertEqual `git v list | wc -l` 0
+echo ''
 
-# # remove test
-# git v remove rctest
-# assertEqual `git v list` "simpletest ... 0.0.1"
+# add test
+echo -n 'testing add functionality ... '
+git v add simpletest
+assertEqual `git v list | wc -l` 1
+git v add rctest
+assertEqual `git v list | wc -l` 2
+echo ''
+
+# remove test
+echo -n 'testing remove functionality ... '
+git v remove rctest
+assertEqual `git v list | wc -l` 1
+assertEqual `git v list | grep 'simpletest' | wc -l` 1
+echo ''
 
 # # increment tests
-# assertEqual `git v up subminor` "simpletest ... 0.0.1 --> 0.0.2"
-# assertEqual `git v up minor` "simpletest ... 0.0.2 --> 0.1.2"
-# assertEqual `git v up major` "simpletest ... 0.1.2 --> 1.1.2"
+echo -n 'testing increment functionality ... '
+assertEqual `git v up subminor | grep '0.0.1 --> 0.0.2' | wc -l` 1
+assertEqual `git v up minor | grep '0.0.2 --> 0.1.2' | wc -l` 1
+assertEqual `git v up major | grep '0.1.2 --> 1.1.2' | wc -l` 1
+echo ''
 
-# # decrement tests
-# assertEqual `git v down subminor` "simpletest ... 1.1.2 --> 1.1.1"
-# assertEqual `git v down minor` "simpletest ... 1.1.1 --> 1.0.1"
-# assertEqual `git v down major` "simpletest ... 1.0.1 --> 0.0.1"
+# decrement tests
+echo -n 'testing decrement functionality ... '
+assertEqual `git v down subminor | grep '1.1.2 --> 1.1.1' | wc -l` 1
+assertEqual `git v down minor | grep '1.1.1 --> 1.0.1' | wc -l` 1
+assertEqual `git v down major | grep '1.0.1 --> 0.0.1' | wc -l` 1
+assertEqual `git v down major | grep '0.0.1 --> 0.0.1' | wc -l` 1
+echo ''
 
-# # rc tests
-# assertEqual `git v rc` "simpletest ... 0.0.1 --> 0.0.1-rc$commit"
-# assertEqual `git v up subminor` "simpletest ... 0.0.1-rc$commit --> 0.0.1"
-# git v remove simpletest
-# git v add rctest
-# assertEqual `git v rc` "rctest ... 0.0.1-rc98ac7a --> 0.0.1-rc$commit"
-# git v remove rctest
+# rc tests
+echo -n 'testing release cycle tagging ... '
+assertEqual `git v rc | grep "0.0.1 --> 0.0.1-rc$commit" | wc -l` 1
+assertEqual `git v up subminor | grep "0.0.1-rc$commit --> 0.0.2" | wc -l` 1
+git v remove simpletest
+git v add rctest
+assertEqual `git v rc | grep "0.0.1-rc98ac7a --> 0.0.1-rc$commit" | wc -l` 1
+git v remove rctest
+echo ''
+
+# finalize
+git v --reset
+rm simpletest rctest
+if [ $FAIL = 'TRUE' ]; then
+	echo 'Fail!'
+	exit 1
+else
+	echo 'All tests ran successfully.'
+	exit 0
+fi
