@@ -38,7 +38,7 @@ main() {
 
     cd $base
     for i in `cat $marks`; do
-        version=`grep -Eoh '\d\.\d\.\d(-rc[0-9a-f]{5,10})?' $i`
+        version=`grep -Eoh '[0-9]+\.[0-9]+\.[0-9]+(-[0-9a-z]{5,20})?' $i | head -1`
         echo "$i ... $version"
     done
 }
