@@ -12,7 +12,7 @@ usage() {
     echo "usage: git v up [options] <type>"
     echo ""
     echo "Arguments:"
-    echo "  type               major, minor, or subminor (major.minor.subminor)"
+    echo "  type               major, minor, or patch (major.minor.patch)"
     echo ""
     echo "Options:"
     echo "  --help              Show help and exit."
@@ -35,23 +35,23 @@ main() {
 
     cd $base
     for i in `cat $marks`; do
-        version=`grep -Eoh '\d\.\d\.\d(-rc[0-9a-f]{5,10})?' $i`
+        version=`grep -Eoh '\d\.\d\.\d(-[0-9a-z]{5,20})?' $i | head -1`
         if [ "$version" = "" ]; then
             echo "No version-like string found in $i. Abort!"
             exit 1
         fi
-        newversion=`echo $version | sed 's/-rc.*//g'`
+        newversion=`echo $version | sed 's/-.*//g'`
         major=`echo $newversion | awk 'BEGIN { FS = "." } ; { print $1 }'`
         minor=`echo $newversion | awk 'BEGIN { FS = "." } ; { print $2 }'`
-        subminor=`echo $newversion | awk 'BEGIN { FS = "." } ; { print $3 }'`
+        patch=`echo $newversion | awk 'BEGIN { FS = "." } ; { print $3 }'`
         if [ "$vtype" = "major" ]; then
             major=`echo "$major + 1" | bc`
         elif [ $vtype = "minor" ]; then
             minor=`echo "$minor + 1" | bc`
-        elif [ $vtype = "subminor" ]; then
-            subminor=`echo "$subminor + 1" | bc`
+        elif [ $vtype = "patch" ]; then
+            patch=`echo "$patch + 1" | bc`
         fi
-        newversion="$major.$minor.$subminor"
+        newversion="$major.$minor.$patch"
         cat $i | sed "s/$version/$newversion/g" > $i.tmp
         mv $i.tmp $i
         echo "$i ... $version --> $newversion"

@@ -1,7 +1,7 @@
 git-v
 ========
 
-Git plugin for managing project version numbers. 
+Semantic versioning management for a project.
 
 
 ## Installation:
@@ -50,10 +50,10 @@ To increment version numbers for all tracked files in a project:
 ~$ git v up <version-type>
 ```
 
-Where ```<version-type>``` is either major, minor, or subminor. An example of incrementing each of these is below:
+Where ```<version-type>``` is either major, minor, or patch. An example of incrementing each of these is below:
 
 ```bash
-~$ git v up subminor
+~$ git v up patch
 module/__init__.py ... 1.0.0 --> 1.0.1
 
 ~$ git v up minor
@@ -70,7 +70,14 @@ To increment the release cycle of the project to the current commit hash, do:
 module/__init__.py ... 1.0.0 --> 1.0.0-rc7f4f6
 ```
 
-Note: for any non-rc operation, the ```-rc``` component of the version scheme will be stripped off. To add the ```-rc``` component, simply do git v rc again.
+Or, to add a specific string as the release cycle tag (i.e. alpha, beta), use:
+
+```bash
+~$ git v rc alpha
+module/__init__.py ... 1.0.0 --> 1.0.0-alpha
+```
+
+Note: for any non-rc operation, all text after the ```-``` component of the version scheme will be stripped off. To add the release-cycle information back, simply do git v rc again.
 
 
 ## Questions/Feedback:

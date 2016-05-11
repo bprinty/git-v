@@ -9,7 +9,10 @@
 # meta
 # ----
 usage() {
-    echo "usage: git v rc [options]"
+    echo "usage: git v rc [options] <tag>"
+    echo ""
+    echo "Arguments:"
+    echo "  tag                 Tag to append to version number (i.e. beta, alpha, etc ...)"
     echo ""
     echo "Options:"
     echo "  --help              Show help and exit."
@@ -24,17 +27,21 @@ main() {
             usage; exit 0
             ;;
     esac
+    commit=`git rev-parse HEAD | cut -c-7`
+    postfix="rc$commit"
+    if [ ! -z $1 ]; then
+        postfix="$1"
+    fi
 
     cd $base
     for i in `cat $marks`; do
-        version=`grep -Eoh '\d\.\d\.\d(-rc[0-9a-f]{5,10})?' $i`
+        version=`grep -Eoh '\d\.\d\.\d(-[0-9a-z]{5,20})?' $i | head -1`
         if [ "$version" = "" ]; then
             echo "No version-like string found in $i. Abort!"
             exit 1
         fi
-        commit=`git rev-parse HEAD | cut -c-7`
-        newversion=`echo $version | sed 's/-rc.*//g'`
-        newversion="$newversion-rc$commit"
+        newversion=`echo $version | sed 's/-.*//g'`
+        newversion="$newversion-$postfix"
         cat $i | sed "s/$version/$newversion/g" > $i.tmp
         mv $i.tmp $i
         echo "$i ... $version --> $newversion"

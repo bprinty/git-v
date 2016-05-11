@@ -58,14 +58,14 @@ echo ''
 
 # # increment tests
 echo -n 'testing increment functionality ... '
-assertEqual `git v up subminor | grep '0.0.1 --> 0.0.2' | wc -l` 1
+assertEqual `git v up patch | grep '0.0.1 --> 0.0.2' | wc -l` 1
 assertEqual `git v up minor | grep '0.0.2 --> 0.1.2' | wc -l` 1
 assertEqual `git v up major | grep '0.1.2 --> 1.1.2' | wc -l` 1
 echo ''
 
 # decrement tests
 echo -n 'testing decrement functionality ... '
-assertEqual `git v down subminor | grep '1.1.2 --> 1.1.1' | wc -l` 1
+assertEqual `git v down patch | grep '1.1.2 --> 1.1.1' | wc -l` 1
 assertEqual `git v down minor | grep '1.1.1 --> 1.0.1' | wc -l` 1
 assertEqual `git v down major | grep '1.0.1 --> 0.0.1' | wc -l` 1
 assertEqual `git v down major | grep '0.0.1 --> 0.0.1' | wc -l` 1
@@ -74,7 +74,9 @@ echo ''
 # rc tests
 echo -n 'testing release cycle tagging ... '
 assertEqual `git v rc | grep "0.0.1 --> 0.0.1-rc$commit" | wc -l` 1
-assertEqual `git v up subminor | grep "0.0.1-rc$commit --> 0.0.2" | wc -l` 1
+assertEqual `git v up patch | grep "0.0.1-rc$commit --> 0.0.2" | wc -l` 1
+assertEqual `git v rc alpha | grep "0.0.2 --> 0.0.2-alpha" | wc -l` 1
+assertEqual `git v rc beta | grep "0.0.2-alpha --> 0.0.2-beta" | wc -l` 1
 git v remove simpletest
 git v add rctest
 assertEqual `git v rc | grep "0.0.1-rc98ac7a --> 0.0.1-rc$commit" | wc -l` 1
