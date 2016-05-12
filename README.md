@@ -31,6 +31,8 @@ To start tracking a file for version management with git-v, use:
 ~$ git v add <file>
 ```
 
+Alternatively, just include a ```.version``` file in the top-level directory of the repository with names of files to track version information for.
+
 To remove a file from tracking with git-v, use:
 
 ```bash

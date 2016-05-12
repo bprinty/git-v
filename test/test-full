@@ -53,7 +53,7 @@ echo ''
 echo -n 'testing remove functionality ... '
 git v remove rctest
 assertEqual `git v list | wc -l` 1
-assertEqual `git v list | grep 'simpletest' | wc -l` 1
+assertEqual `git v list | grep 'simpletest ... 0.0.1' | wc -l` 1
 echo ''
 
 # # increment tests
@@ -85,6 +85,15 @@ git v remove simpletest
 git v add rctest
 assertEqual `git v rc | grep "0.0.1-rc98ac7a --> 0.0.1-rc$commit" | wc -l` 1
 git v remove rctest
+echo ''
+
+# .version file tests
+echo -n 'testing versioning from .versions file ... '
+assertEqual `git v list | wc -l` 0
+echo "test/simpletest" > "$base/.version"
+assertEqual `git v list | wc -l` 1
+assertEqual `git v list | grep 'simpletest ... 0.0.1' | wc -l` 1
+rm "$base/.version"
 echo ''
 
 # finalize

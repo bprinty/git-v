@@ -54,20 +54,27 @@ main() {
     fi
 
     # ensure user is inside git repository
-    gitdir=`git rev-parse --show-toplevel`
-    if [ ! -e "$gitdir" ]; then
+    if [ ! -e "$base" ]; then
         exit 1
     fi
 
     # create directory if not exists
-    if [ ! -e "$gitdir/.git/version" ]; then
-        mkdir "$gitdir/.git/version"
+    if [ ! -e "$base/.git/version" ]; then
+        mkdir "$base/.git/version"
     fi
-    touch "$gitdir/.git/version/marks"
+    touch "$marks"
+
+    # add .versions file to marks
+    if [ -e "$base/.version" ]; then
+        cat "$base/.version" >> "$marks"
+        sort "$marks" | uniq > "$marks.tmp"
+        mv "$marks.tmp" "$marks"
+    fi
 
     sh "$workingdir/git-v-$subcommand" "$@"
 }
 
 base=`git rev-parse --show-toplevel`
+marks="$base/.git/version/marks"
 main "$@"
 
