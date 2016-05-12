@@ -77,6 +77,10 @@ assertEqual `git v rc | grep "0.0.1 --> 0.0.1-rc$commit" | wc -l` 1
 assertEqual `git v up patch | grep "0.0.1-rc$commit --> 0.0.2" | wc -l` 1
 assertEqual `git v rc alpha | grep "0.0.2 --> 0.0.2-alpha" | wc -l` 1
 assertEqual `git v rc beta | grep "0.0.2-alpha --> 0.0.2-beta" | wc -l` 1
+assertEqual `git v rc beta up | grep "0.0.2-beta --> 0.0.2-beta.1" | wc -l` 1
+assertEqual `git v rc beta up | grep "0.0.2-beta.1 --> 0.0.2-beta.2" | wc -l` 1
+assertEqual `git v rc beta down | grep "0.0.2-beta.2 --> 0.0.2-beta.1" | wc -l` 1
+assertEqual `git v down patch | grep "0.0.2-beta.1 --> 0.0.1" | wc -l` 1
 git v remove simpletest
 git v add rctest
 assertEqual `git v rc | grep "0.0.1-rc98ac7a --> 0.0.1-rc$commit" | wc -l` 1

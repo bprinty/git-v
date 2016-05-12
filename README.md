@@ -77,6 +77,19 @@ Or, to add a specific string as the release cycle tag (i.e. alpha, beta), use:
 module/__init__.py ... 1.0.0 --> 1.0.0-alpha
 ```
 
+To increment/decrement the version of a specified release cycle tag, use:
+
+```bash
+~$ git v rc beta up
+module/__init__.py ... 1.0.0-beta --> 1.0.0-beta.1
+
+~$ git v rc beta up
+module/__init__.py ... 1.0.0-beta.1 --> 1.0.0-beta.2
+
+~$ git v rc beta down
+module/__init__.py ... 1.0.0-beta.2 --> 1.0.0-beta.1
+```
+
 Note: for any non-rc operation, all text after the ```-``` component of the version scheme will be stripped off. To add the release-cycle information back, simply do git v rc again.
 
 
