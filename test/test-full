@@ -37,7 +37,7 @@ assertEqual() {
 # base tests
 echo -n 'testing basic commands ... '
 assertEqual `git v --version | wc -l` 1
-assertEqual `git v -h | wc -l` 10
+assertEqual `git v -h | wc -l` 11
 assertEqual `git v list | wc -l` 0
 echo ''
 
@@ -94,6 +94,19 @@ echo "test/simpletest" > "$base/.version"
 assertEqual `git v list | wc -l` 1
 assertEqual `git v list | grep 'simpletest ... 0.0.1' | wc -l` 1
 rm "$base/.version"
+echo ''
+
+# tagging tests
+echo -n 'testing tagging functionality ... '
+git v add simpletest
+assertEqual `git v rc testing | grep "0.0.1 --> 0.0.1-testing" | wc -l` 1
+assertEqual `git v tag | grep "Created tag '0.0.1-testing'" | wc -l` 1
+assertEqual `git tag | grep "0.0.1-testing" | wc -l` 1
+assertEqual `git v tag -f -m 'tag test' | grep "Created tag '0.0.1-testing'" | wc -l` 1
+assertEqual `git tag | grep "0.0.1-testing" | wc -l` 1
+assertEqual `git v tag -d | grep "0.0.1-testing" | wc -l` 1
+assertEqual `git tag | grep "0.0.1-testing" | wc -l` 0
+git v remove simpletest
 echo ''
 
 # finalize

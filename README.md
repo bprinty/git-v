@@ -94,6 +94,28 @@ module/__init__.py ... 1.0.0-beta.2 --> 1.0.0-beta.1
 
 Note: for any non-rc operation, all text after the ```-``` component of the version scheme will be stripped off. To add the release-cycle information back, simply do git v rc again.
 
+To create a tag for your repository with the current tracked version, use:
+
+```bash
+# normal tag
+~$ git v tag
+Created tag 0.0.1
+
+# creating a signed tag
+~$ git v tag -s
+Created tag '0.0.1' (was 0c3f704)
+
+# creating a signed tag with a message
+~$ git v tag -s -m "this is a tag"
+```
+
+To delete a tag with the current tracked version, use:
+
+```bash
+~$ git v tag -d
+Deleted tag '0.0.1' (was 0c3f704)
+```
+
 
 ## Questions/Feedback:
 

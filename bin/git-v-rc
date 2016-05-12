@@ -9,10 +9,13 @@
 # meta
 # ----
 usage() {
-    echo "usage: git v rc [options] <tag>"
+    echo "usage: git v rc [options] <tag> [<increment>]"
     echo ""
     echo "Arguments:"
     echo "  tag                 Tag to append to version number (i.e. beta, alpha, etc ...)"
+    echo ""
+    echo "Optional Arguments:"
+    echo "  increment           Increment/Decrement type for release cycle version (up|down)"
     echo ""
     echo "Options:"
     echo "  --help              Show help and exit."
@@ -27,6 +30,7 @@ main() {
             usage; exit 0
             ;;
     esac
+
     commit=`git rev-parse HEAD | cut -c-7`
     postfix="rc$commit"
     if [ ! -z $1 ]; then

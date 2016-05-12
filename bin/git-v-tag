@@ -1,0 +1,63 @@
+#!/usr/bin/env sh
+#
+# add tag repo with tracked version
+# 
+# @author <bprinty@gmail.com>
+# ------------------------------------------------
+
+
+# meta
+# ----
+usage() {
+    echo "usage: git v tag [options]"
+    echo ""
+    echo "Options:"
+    echo "  -f                  Delete existing tag if it exists."
+    echo "  -s                  Sign tag with gpg key."
+    echo "  -m                  Message for taggging."
+    echo "  --help              Show help and exit."
+}
+
+
+# exec
+# ----
+main() {
+
+    FORCE='FALSE'
+    DELETE='FALSE'
+    OPTIONS=''
+    case "$1" in
+        "-h"|"--help")
+            usage; exit 0
+            ;;
+        "-f"|"--force")
+            FORCE='TRUE'; shift;
+            ;;
+        "-d"|"--delete")
+            DELETE='TRUE'; shift;
+            ;;
+        "-s"|"--sign")
+            OPTIONS=$OPTIONS' -s '; shift;
+            ;;
+        "-m"|"--message")
+            OPTIONS=$OPTIONS' "'$2'"'; shift; shift;
+            ;;
+    esac
+
+    # getting version
+    version=`git v list | head -1 | sed 's/.*... //g'`
+    if [ "$FORCE" = "TRUE" -o "$DELETE" = "TRUE" ]; then
+        if [ `git tag | grep "$version" | wc -l` -eq 1 ]; then
+            git tag -d $version
+        fi
+    fi
+    if [ "$DELETE" != "TRUE" ]; then
+        git tag $OPTIONS $version
+        commit=`git rev-parse HEAD | cut -c-7`
+        echo "Created tag '$version' (was $commit)"
+    fi
+}
+
+base=`git rev-parse --show-toplevel`
+marks="$base/.git/version/marks"
+main "$@"

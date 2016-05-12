@@ -18,11 +18,12 @@ usage() {
     echo "  up        Increment version numbers for tracked files."
     echo "  down      Decrement version numbers for tracked files."
     echo "  rc        Add release cycle commit hash on version number for tracked files."
+    echo "  tag       Create tag for repo from tracked version number."
     echo
 }
 
 version() {
-    echo "0.0.1"
+    echo "0.0.1-testing"
 }
 
 

@@ -9,7 +9,7 @@
 # ------
 BIN_DIR   = /usr/local/bin
 LOADER    = git-v
-COMMANDS  = git-v-list git-v-add git-v-remove git-v-up git-v-down git-v-rc
+COMMANDS  = git-v-list git-v-add git-v-remove git-v-up git-v-down git-v-rc git-v-tag
 TESTS     = test-full
 
 
