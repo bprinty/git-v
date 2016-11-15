@@ -11,6 +11,7 @@ BIN_DIR   = /usr/local/bin
 LOADER    = git-v
 COMMANDS  = git-v-list git-v-add git-v-remove git-v-up git-v-down git-v-rc git-v-tag
 TESTS     = test-full
+REMOTE    = origin
 VERSION   = `PATH=./bin:$$PATH git v -v`
 
 
@@ -35,5 +36,5 @@ test:
 
 release:
 	TAG=$(VERSION) && git tag -d $$TAG || echo "local tag available"
-	TAG=$(VERSION) && git push origin :$$TAG || echo "remote tag available"
-	TAG=$(VERSION) && git tag $$TAG && git push origin $$TAG
+	TAG=$(VERSION) && git push $(REMOTE) :$$TAG || echo "remote tag available"
+	TAG=$(VERSION) && git tag $$TAG && git push $(REMOTE) $$TAG
