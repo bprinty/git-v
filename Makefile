@@ -11,6 +11,7 @@ BIN_DIR   = /usr/local/bin
 LOADER    = git-v
 COMMANDS  = git-v-list git-v-add git-v-remove git-v-up git-v-down git-v-rc git-v-tag
 TESTS     = test-full
+VERSION   = `PATH=./bin:$$PATH git v -v`
 
 
 # targets
@@ -32,7 +33,7 @@ uninstall:
 test:
 	@PATH=`pwd`/bin:$$PATH && for cmd in $(TESTS); do bash ./test/$$cmd; done
 
-release: test
-	PATH=`pwd`/bin:$$PATH && TAG=`git v -v` && git tag -d $$TAG || echo "local tag available"
-	PATH=`pwd`/bin:$$PATH && TAG=`git v -v` && git push origin :$$TAG || echo "remote tag available"
-	PATH=`pwd`/bin:$$PATH && TAG=`git v -v` && git tag $$TAG && git push origin $$TAG
+release:
+	TAG=$(VERSION) && git tag -d $$TAG || echo "local tag available"
+	TAG=$(VERSION) && git push origin :$$TAG || echo "remote tag available"
+	TAG=$(VERSION) && git tag $$TAG && git push origin $$TAG
