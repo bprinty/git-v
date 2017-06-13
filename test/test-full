@@ -56,7 +56,7 @@ assertEqual `git v list | wc -l` 1
 assertEqual `git v list | grep 'simpletest ... 0.0.1' | wc -l` 1
 echo ''
 
-# # increment tests
+# increment tests
 echo -n 'testing increment functionality ... '
 assertEqual `git v up patch | grep '0.0.1 --> 0.0.2' | wc -l` 1
 assertEqual `git v up minor | grep '0.0.2 --> 0.1.0' | wc -l` 1
