@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 #
-# increment version numbers for marked files
+# set version numbers for marked files
 # 
 # @author <bprinty@gmail.com>
 # ------------------------------------------------
@@ -9,10 +9,10 @@
 # meta
 # ----
 usage() {
-    echo "usage: git v up [options] <type>"
+    echo "usage: git v set <version>"
     echo ""
     echo "Arguments:"
-    echo "  type               major, minor, or patch (major.minor.patch)"
+    echo "  version             major.minor.patch"
     echo ""
     echo "Options:"
     echo "  --help              Show help and exit."
@@ -31,7 +31,7 @@ main() {
             usage; exit 0
             ;;
     esac
-    vtype=$1
+    input=$1
 
     cd $base
     for i in `cat $marks`; do
@@ -40,21 +40,7 @@ main() {
             echo "No version-like string found in $i. Abort!"
             exit 1
         fi
-        newversion=`echo $version | sed 's/-.*//g'`
-        major=`echo $newversion | awk 'BEGIN { FS = "." } ; { print $1 }'`
-        minor=`echo $newversion | awk 'BEGIN { FS = "." } ; { print $2 }'`
-        patch=`echo $newversion | awk 'BEGIN { FS = "." } ; { print $3 }'`
-        if [ "$vtype" = "major" ]; then
-            major=`echo "$major + 1" | bc`
-	    minor=0
-	    patch=0
-        elif [ $vtype = "minor" ]; then
-            minor=`echo "$minor + 1" | bc`
-	    patch=0
-        elif [ $vtype = "patch" ]; then
-            patch=`echo "$patch + 1" | bc`
-        fi
-        newversion="$major.$minor.$patch"
+        newversion=$input
         cat $i | sed "s/$version/$newversion/g" > $i.tmp
         mv $i.tmp $i
         echo "$i ... $version --> $newversion"
