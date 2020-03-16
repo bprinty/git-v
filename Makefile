@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 #
 # makefile for git-v plugin
-# 
+#
 # @author <bprinty@gmail.com>
 # ------------------------------------------------
 
@@ -35,6 +35,5 @@ test:
 	@PATH=`pwd`/bin:$$PATH && for cmd in $(TESTS); do bash ./test/$$cmd; done
 
 release:
-	TAG=$(VERSION) && git tag -d $$TAG || echo "local tag available"
-	TAG=$(VERSION) && git push $(REMOTE) :$$TAG || echo "remote tag available"
-	TAG=$(VERSION) && git tag $$TAG && git push $(REMOTE) $$TAG
+	TAG=$(VERSION) && git tag -f $$TAG && git push -f $(REMOTE) $$TAG
+	TAG=$(VERSION) && vuepress build && cd .vuepress/dist && git init && git add -A && git commit -m "git-v, $$TAG" && git push -f git@github.com:bprinty/git-v.git master:gh-pages
