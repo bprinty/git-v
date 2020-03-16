@@ -1,5 +1,4 @@
-git-v
-========
+# git-v
 
 Semantic versioning management for a project. Inspired by the [Semantic Versioning 2.0.0](http://semver.org/) documentation.
 
