@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 #
 # increment version numbers for marked files
-# 
+#
 # @author <bprinty@gmail.com>
 # ------------------------------------------------
 
@@ -35,10 +35,13 @@ main() {
 
     cd $base
     for i in `cat $marks`; do
-        version=`grep -Eoh '[0-9]+\.[0-9]+\.[0-9]+(-[0-9a-z]{2,30}(\.[0-9]+)?)?' $i | head -1`
-        if [ "$version" = "" ]; then
+        version=`grep -Eoh 'version' $i | grep -Eoh '[0-9]+\.[0-9]+\.[0-9]+(-[0-9a-z]{2,30}(\.[0-9]+)?)?' | head -1`
+        if [ "$version" == "" ]; then
+          version=`grep -Eoh '[0-9]+\.[0-9]+\.[0-9]+(-[0-9a-z]{2,30}(\.[0-9]+)?)?' $i | head -1`
+          if [ "$version" == "" ]; then
             echo "No version-like string found in $i. Abort!"
             exit 1
+          fi
         fi
         newversion=`echo $version | sed 's/-.*//g'`
         major=`echo $newversion | awk 'BEGIN { FS = "." } ; { print $1 }'`
@@ -56,7 +59,7 @@ main() {
         fi
         newversion="$major.$minor.$patch"
         cat $i | sed "s/$version/$newversion/g" > $i.tmp
-        mv $i.tmp $i
+        cat $i.tmp > $i && rm -f $i.tmp
         echo "$i ... $version --> $newversion"
     done
 }

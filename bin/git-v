@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 #
 # git plugin for managing version numbering
-# 
+#
 # @author <bprinty@gmail.com>
 # ------------------------------------------------
 
@@ -23,7 +23,7 @@ usage() {
 }
 
 version() {
-    echo "0.0.2"
+    echo "0.1.0"
 }
 
 
@@ -78,4 +78,3 @@ main() {
 base=`git rev-parse --show-toplevel`
 marks="$base/.git/version/marks"
 main "$@"
-
