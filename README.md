@@ -1,9 +1,9 @@
-# git-v
+# Git Versioning Tool
 
 Semantic versioning management for a project. Inspired by the [Semantic Versioning 2.0.0](http://semver.org/) documentation.
 
 
-## Installation:
+## Installation
 
 Clone the repo and install with make:
 
@@ -22,9 +22,11 @@ NOTE: Windows users that do not have Make installed will have to just copy execu
 ```
 
 
-## Usage:
+## Usage
 
-To start tracking a file for version management with git-v, use:
+### Tracking Files
+
+To start tracking specific files for version management with git-v, use:
 
 ```bash
 ~$ git v add <file>
@@ -38,12 +40,22 @@ To remove a file from tracking with git-v, use:
 ~$ git v remove <file>
 ```
 
+::: tip
+
+By default, `package.json` files in JavaScript projects and `src/__init__.py` files in Python projects will be tracked for versioning. If you have a JavaScript or Python project, you don't need to explicitly track any version files.
+
+:::
+
+### Listing Versions
+
 To list version numbers for tracked files, use:
 
 ```bash
 ~$ git v list
 module/__init__.py ... 1.0.0
 ```
+
+### Semantic Versioning
 
 To increment version numbers for all tracked files in a project:
 
@@ -63,6 +75,21 @@ module/__init__.py ... 1.0.0 --> 1.1.0
 ~$ git v up major
 module/__init__.py ... 1.0.0 --> 2.0.0
 ```
+
+You can also decrement the versioning with the same type of syntax:
+
+```bash
+~$ git v down patch
+module/__init__.py ... 1.0.1 --> 1.0.0
+
+~$ git v down minor
+module/__init__.py ... 1.1.0 --> 1.0.0
+
+~$ git v down major
+module/__init__.py ... 2.0.0 --> 1.0.0
+```
+
+### Release Cycle Versioning
 
 To increment the release cycle of the project to the current commit hash, do:
 
@@ -91,7 +118,10 @@ module/__init__.py ... 1.0.0-beta.1 --> 1.0.0-beta.2
 module/__init__.py ... 1.0.0-beta.2 --> 1.0.0-beta.1
 ```
 
-Note: for any non-rc operation, all text after the ```-``` component of the version scheme will be stripped off. To add the release-cycle information back, simply do git v rc again.
+Note: for any non-rc operation, all text after the `-` component of the version scheme will be stripped off. To add the release-cycle information back, simply do git v rc again.
+
+
+### Tagging
 
 To create a tag for your repository with the current tracked version, use:
 
@@ -115,7 +145,6 @@ To delete a tag with the current tracked version, use:
 Deleted tag '0.0.1' (was 0c3f704)
 ```
 
+## Questions/Feedback
 
-## Questions/Feedback:
-
-Submit an issue in the GitHub issue tracker.
+Submit an issue in the GitHub [issue tracker](https://github.com/bprinty/git-v/issues) for the project.
