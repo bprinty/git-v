@@ -65,20 +65,23 @@ main() {
     fi
     touch "$marks"
 
-    # add .versions file to marks
+    # quietly add default files to marks (if they exist)
     if [ -e "$base/.version" ]; then
-        cat "$base/.version" >> "$marks"
-        sort "$marks" | uniq > "$marks.tmp"
-        mv "$marks.tmp" "$marks"
+      bash -c "\"$workingdir/git-v-add\" \"$base/.version\" &>/dev/null"
+    fi
+    if [ -e "$base/package.json" ]; then
+      bash -c "\"$workingdir/git-v-add\" \"$base/package.json\" &>/dev/null"
+    fi
+    if [ -e "$base"/*/__init__.py ]; then
+      bash -c "\"$workingdir/git-v-add\" \"$base\"/*/__init__.py &>/dev/null"
     fi
 
-    # add default files to marks
-    if [ -e "$base/package.json" ]; then
-      sh "$workingdir/git-v-add" package.json
-    fi
-    if [ -e "$base/*/__init__.py" ]; then
-      sh "$workingdir/git-v-add" add */__init__.py
-    fi
+    # remove bad marks
+    for i in `cat $marks`; do
+      if [ ! -f $i ]; then
+        bash -c "\"$workingdir/git-v-remove\" \"$i\" &>/dev/null"
+      fi
+    done
 
     # run subcommand
     sh "$workingdir/git-v-$subcommand" "$@"

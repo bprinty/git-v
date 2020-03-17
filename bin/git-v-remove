@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 #
 # add file to git-v tracking
-# 
+#
 # @author <bprinty@gmail.com>
 # ------------------------------------------------
 
@@ -43,4 +43,3 @@ main() {
 base=`git rev-parse --show-toplevel`
 marks="$base/.git/version/marks"
 main "$@"
-
