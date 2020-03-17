@@ -32,9 +32,9 @@ main() {
     OLDIFS=$IFS;
     IFS="$(printf '\n\t')"
     for i in "$@"; do
-        version=`grep -Eoh 'version' $i | grep -Eoh '[0-9]+\.[0-9]+\.[0-9]+(-[0-9a-z]{2,30}(\.[0-9]+)?)?' | head -1`
+        version=`grep -Eoh 'version' $i 2>/dev/null | grep -Eoh '[0-9]+\.[0-9]+\.[0-9]+(-[0-9a-z]{2,30}(\.[0-9]+)?)?' | head -1`
         if [ "$version" == "" ]; then
-          version=`grep -Eoh '[0-9]+\.[0-9]+\.[0-9]+(-[0-9a-z]{2,30}(\.[0-9]+)?)?' $i | head -1`
+          version=`grep -Eoh '[0-9]+\.[0-9]+\.[0-9]+(-[0-9a-z]{2,30}(\.[0-9]+)?)?' $i 2>/dev/null | head -1`
           if [ "$version" == "" ]; then
             echo "No version-like string found in $i. Abort!"
             exit 1

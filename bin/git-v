@@ -72,6 +72,15 @@ main() {
         mv "$marks.tmp" "$marks"
     fi
 
+    # add default files to marks
+    if [ -e "$base/package.json" ]; then
+      sh "$workingdir/git-v-add" package.json
+    fi
+    if [ -e "$base/*/__init__.py" ]; then
+      sh "$workingdir/git-v-add" add */__init__.py
+    fi
+
+    # run subcommand
     sh "$workingdir/git-v-$subcommand" "$@"
 }
 
