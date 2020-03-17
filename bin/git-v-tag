@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 #
 # add tag repo with tracked version
-# 
+#
 # @author <bprinty@gmail.com>
 # ------------------------------------------------
 
@@ -13,6 +13,8 @@ usage() {
     echo ""
     echo "Options:"
     echo "  -f                  Delete existing tag if it exists."
+    echo "  -d                  Message for taggging."
+    echo "  -c                  Message for taggging."
     echo "  -s                  Sign tag with gpg key."
     echo "  -m                  Message for taggging."
     echo "  --help              Show help and exit."
@@ -24,7 +26,7 @@ usage() {
 main() {
 
     FORCE='FALSE'
-    DELETE='FALSE'
+    COMMIT='FALSE'
     OPTIONS=''
     case "$1" in
         "-h"|"--help")
@@ -33,8 +35,8 @@ main() {
         "-f"|"--force")
             FORCE='TRUE'; shift;
             ;;
-        "-d"|"--delete")
-            DELETE='TRUE'; shift;
+        "-c"|"--commit")
+            COMMIT='TRUE'; shift;
             ;;
         "-s"|"--sign")
             OPTIONS=$OPTIONS' -s '; shift;
@@ -46,16 +48,21 @@ main() {
 
     # getting version
     version=`git v list | head -1 | sed 's/.*... //g'`
-    if [ "$FORCE" = "TRUE" -o "$DELETE" = "TRUE" ]; then
+    if [ "$FORCE" == "TRUE" -o "$DELETE" == "TRUE" ]; then
         if [ `git tag | grep "$version" | wc -l` -eq 1 ]; then
             git tag -d $version
         fi
     fi
-    if [ "$DELETE" != "TRUE" ]; then
-        git tag $OPTIONS $version
-        commit=`git rev-parse HEAD | cut -c-7`
-        echo "Created tag '$version' (was $commit)"
+
+    # commit any changes (if specified)
+    if [ "$COMMIT" == 'TRUE' ]; then
+      git commit -am 'Updating version info before tag.'
     fi
+
+    # tag
+    git tag $OPTIONS $version
+    commit=`git rev-parse HEAD | cut -c-7`
+    echo "Created tag '$version' (was $commit)"
 }
 
 base=`git rev-parse --show-toplevel`
